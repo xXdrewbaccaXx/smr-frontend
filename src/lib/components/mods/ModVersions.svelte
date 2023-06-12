@@ -120,8 +120,18 @@
           {#if expandedVersions.has(version.id)}
             <Row>
               <Cell colspan={6}>
-                <div class="col-span-3 p-2">Size: {prettyBytes(version.size)}</div>
-                <div class="col-span-3 p-2">Hash: {version.hash}</div>
+                {#if version.targets.length != 0}
+                  <hr style="col-span-3; margin-top: 10px; margin-bottom: 10px; vertical-align: middle;" />
+                  {#each version.targets as target, _}
+                    <div class="col-span-3">Target: {prettyTarget(target.targetName)}</div>
+                    <div class="col-span-3">Size: {prettyBytes(target.size)}</div>
+                    <div class="col-span-3">Hash: {target.hash}</div>
+                    <hr style="col-span-3; margin-top: 10px; margin-bottom: 10px; vertical-align: middle;" />
+                  {/each}
+                {:else}
+                  <div class="col-span-3 p-2">Size: {prettyBytes(version.size)}</div>
+                  <div class="col-span-3 p-2">Hash: {version.hash}</div>
+                {/if}
 
                 <div class="col-span-6 p-2 markdown-content">
                   {#await markdown(version.changelog) then changelogRendered}

@@ -35,3 +35,11 @@ export const prettyTarget = (target: string) => {
 
   return target;
 };
+
+export const limitCharacters = (text: string, limit: number) => {
+  if (text.length <= limit) {
+    return text;
+  }
+
+  return text.substring(0, limit) + '...';
+};

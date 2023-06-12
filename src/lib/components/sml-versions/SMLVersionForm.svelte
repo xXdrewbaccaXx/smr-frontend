@@ -105,7 +105,7 @@
       {#each $data.targets as target, i}
         <div class="flex content-center gap-2">
           <div>
-            <Select bind:value={target.targetName} label="Platform">
+            <Select bind:value={target.targetName} label="Target">
               <Option value="WindowsNoEditor">Windows Client</Option>
               <Option value="WindowsServer">Windows Server</Option>
               <Option value="LinuxServer">Linux Server</Option>

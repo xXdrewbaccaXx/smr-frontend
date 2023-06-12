@@ -1,15 +1,20 @@
 <script lang="ts">
-  import type { Version } from '$lib/generated';
+  import type { Version, VersionTarget } from '$lib/generated';
+  import { API_REST } from '$lib/core';
   import { base } from '$app/paths';
   import Card, { Content } from '@smui/card';
   import { Icon } from '@smui/common';
-  import { prettyDate } from '$lib/utils/formatting';
+  import { prettyBytes, prettyDate, prettyTarget } from '$lib/utils/formatting';
   import { installMod } from '$lib/stores/launcher';
 
+  type IVersion = Pick<Version, 'id' | 'link' | 'version' | 'created_at'> & {
+    targets?: Pick<VersionTarget, 'targetName' | 'size' | 'hash'>[];
+  };
+
   type ILatestVersions = {
-    alpha?: Pick<Version, 'id' | 'link' | 'version' | 'created_at'>;
-    beta?: Pick<Version, 'id' | 'link' | 'version' | 'created_at'>;
-    release?: Pick<Version, 'id' | 'link' | 'version' | 'created_at'>;
+    alpha?: IVersion;
+    beta?: IVersion;
+    release?: IVersion;
   };
 
   const stabilities = {
@@ -38,7 +43,27 @@
                 >Version {latestVersions[stability].version} ({stability})</a>
               <div>{prettyDate(latestVersions[stability].created_at)}</div>
             </div>
-            <div class="text-3xl w-14 h-14 p-2.5">
+            <!-- <div class="text-3xl w-14 h-14 p-2.5"> -->
+            {#if latestVersions[stability].targets.length != 0}
+              <div class="text-lg break-words">
+                {#each latestVersions[stability].targets as target}
+                  <div>
+                    <a
+                      href={API_REST +
+                        '/mod/' +
+                        modId +
+                        '/versions/' +
+                        latestVersions[stability].id +
+                        '/target/' +
+                        target.targetName +
+                        '/download'}
+                      class="text-yellow-500 underline"
+                      ><Icon class="material-icons" style="height:5px;">download</Icon></a>
+                    {prettyTarget(target.targetName)} - {prettyBytes(target.size)}
+                  </div>
+                {/each}
+              </div>
+            {:else}
               <a
                 href="#top"
                 on:click={() => installMod(modId)}
@@ -46,7 +71,7 @@
                 class="text-yellow-500 underline">
                 <Icon class="material-icons">download</Icon>
               </a>
-            </div>
+            {/if}
           </div>
         {/if}
       {/each}
