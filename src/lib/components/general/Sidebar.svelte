@@ -10,6 +10,8 @@
   import { loginDialogOpen } from '$lib/stores/global';
   import { getTranslate } from '@tolgee/svelte';
 
+  //This is a comment.
+
   export let open: boolean;
   export let drawerVariant: 'modal' | 'dismissible';
   export let hideTopElements: boolean;
